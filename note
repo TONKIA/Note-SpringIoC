@@ -1,0 +1,172 @@
+Spring框架学习
+
+控制反转（Inversion of Control）
+依赖注入（Dependency Injection，实现IoC的一种手段）：设值方法注入、构造器注入
+
+面向切面（Aspect Oriented Programming）
+IoC容器（可以看做是更加高级的工厂模式）
+AOP容器
+
+xml 
+|dtd:document type defination （旧）本身不是一个xml文件
+|xsd:xml schema defination
+	
+spring-framework-4.1.1.RELEASE 
+|docs
+|libs
+|schema
+
+BeanFactory 接口描述了管理对象的工厂，也就是IcC容器
+|-ApplicationContext 子接口
+	|-ClassPathXmlApplicationContext
+	|-FileSystemXmlApplicationContext
+	
+xml文件的命名 推荐为 applicationContext.xml或者beans.xml
+
+IoC容器涉及到的jar包(5个主要jar包)：
+beans.jar
+context.jar
+context.support.jar
+core.jar
+expression.jar
+commons-logging.jar（日志输出）
+
+如果配置文件在类路径下：
+	ClassPathXmlApplicationContext(String... configLocations)
+如果配置文件在文件系统下：
+	FileSystemXmlApplicationContext(String... configLocations)
+创建、销毁：
+	public Object getBean(String name) //参数name是bean的ID或名字
+	public <T> T getBean(Class<T> requiredType) //接口类型
+	public <T> T getBean(String name，Class<T> requiredType)
+	
+/////////////////////////////////////////////////////////////////////////	
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="..." class="...">
+		<!-- collaborators and configuration for this bean go here -->
+	</bean>
+
+	<bean id="..." class="...">
+		<!-- collaborators and configuration for this bean go here -->
+	</bean>
+
+	<!-- more bean definitions go here -->
+
+</beans>
+/////////////////////////////////////////////////////////////////////////	
+
+scope="singleton" 单例模式
+scope="prototype"
+
+lazy-init="default" 饿汉式
+lazy-init="false" 饿汉式
+lazy-init="true" 懒汉式
+
+Spring不仅仅要实现类的实现还要实现类的装配，给bean注入值
+/////////////////////////////////////////////////////////////////////////	
+
+使用参数名
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg type="int" value="7500000"/>
+    <constructor-arg type="java.lang.String" value="42"/>
+</bean>
+
+使用参数索引
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg index="0" value="7500000"/>
+    <constructor-arg index="1" value="42"/>
+</bean>
+
+以上方法不建议，必须要有相应的构造函数。
+
+通过setter注入
+<bean id="exampleBean" class="examples.ExampleBean">
+    <!-- setter injection using the nested ref element -->
+    <property name="beanOne">
+        <ref bean="anotherExampleBean"/>
+    </property>
+
+    <!-- setter injection using the neater ref attribute -->
+    <property name="beanTwo" ref="yetAnotherBean"/>
+    <property name="integerProperty" value="1"/>
+</bean>
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+
+集合对象注入
+<bean id="moreComplexObject" class="example.ComplexObject">
+    <!-- results in a setAdminEmails(java.util.Properties) call -->
+    <property name="adminEmails">
+        <props>
+            <prop key="administrator">administrator@example.org</prop>
+            <prop key="support">support@example.org</prop>
+            <prop key="development">development@example.org</prop>
+        </props>
+    </property>
+    <!-- results in a setSomeList(java.util.List) call -->
+    <property name="someList">
+        <list>
+            <value>a list element followed by a reference</value>
+            <ref bean="myDataSource" />
+        </list>
+    </property>
+    <!-- results in a setSomeMap(java.util.Map) call -->
+    <property name="someMap">
+        <map>
+            <entry key="an entry" value="just some string"/>
+            <entry key ="a ref" value-ref="myDataSource"/>
+        </map>
+    </property>
+    <!-- results in a setSomeSet(java.util.Set) call -->
+    <property name="someSet">
+        <set>
+            <value>just some string</value>
+            <ref bean="myDataSource" />
+        </set>
+    </property>
+</bean>
+
+
+/////////////////////////////////////////////////////////////////////////	
+以上是各种值的注入，下面是各种依赖注入
+
+/////////////////////////////////////////////////////////////////////////	
+
+<beans>
+    <bean id="foo" class="x.y.Foo">
+        <constructor-arg ref="bar"/>
+        <constructor-arg ref="baz"/>
+    </bean>
+
+    <bean id="bar" class="x.y.Bar"/>
+
+    <bean id="baz" class="x.y.Baz"/>
+</beans>
+
+/////////////////////////////////////////////////////////////////////////	
+<bean id="exampleBean" class="examples.ExampleBean">
+    <!-- setter injection using the nested ref element -->
+    <property name="beanOne">
+        <ref bean="anotherExampleBean"/>
+    </property>
+
+    <!-- setter injection using the neater ref attribute -->
+    <property name="beanTwo" ref="yetAnotherBean"/>
+    <property name="integerProperty" value="1"/>
+</bean>
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+
+/////////////////////////////////////////////////////////////////////////
+DBCP所需的jar包：
+|-commons-pool
+|-commons-collection
+|-commons-dbcp
+|-相应数据库的驱动jar
+
+

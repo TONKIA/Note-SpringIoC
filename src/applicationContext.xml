@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- <bean id="userService" class="com.tonkia.service.impl.UserServiceImpl"> 
+		</bean> -->
+
+	<!-- <bean id="userService" class="com.tonkia.service.impl.UserServiceImpl"> 
+		<constructor-arg name="age" value="66"></constructor-arg> </bean> -->
+
+	<bean id="userService" class="com.tonkia.service.impl.UserServiceImpl">
+
+		<constructor-arg name="age" value="66"></constructor-arg>
+
+		<property name="ud" ref="userDao">
+		</property>
+
+		<!-- <property name="ud"> <ref bean="userDao"></ref> </property> -->
+
+		<!-- <property name="ud"> <bean id="userDao" class="com.tonkia.dao.impl.UserDaoImpl"></bean> 
+			</property> 注意 特别坑 -->
+
+		<property name="list">
+			<set>
+				<value>zhangsan</value>
+				<value>lisi</value>
+				<value>wangwu</value>
+			</set>
+		</property>
+		<property name="map">
+			<map>
+				<entry>
+					<key>
+						<value>lisi</value>
+					</key>
+					<value>11</value>
+				</entry>
+				<entry key="wangwu" value="55">
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="userDao" class="com.tonkia.dao.impl.UserDaoImpl">
+		<property name="ds" ref="ds"></property>
+	</bean>
+
+	<bean id="ds" class="org.apache.commons.dbcp2.BasicDataSource"
+		destroy-method="close" scope="singleton">
+		<property name="username" value="root"></property>
+		<property name="password" value=""></property>
+		<property name="url" value="jdbc:mysql://localhost:3306/test"></property>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="minIdle" value="2"></property>
+	</bean>
+</beans>
