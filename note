@@ -169,4 +169,30 @@ DBCP所需的jar包：
 |-commons-dbcp
 |-相应数据库的驱动jar
 
+/////////////////////////////////////////////////////////////////////////
+Servlet的IoC容器
+
+配置web.xml文件
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:beans.xml</param-value>
+	</context-param>
+	<!-- 添加监听器 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoader</listener-class>
+	</listener>
+
+在Servlet中获取bean
+	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+	us = wac.getBean("userService", UserService.class);
+	
+	WebApplicationContext
+	ApplicationContext
+	BeanFactory
+	
+	BeanFactory 接口描述了管理对象的工厂，也就是IoC容器
+	|-ApplicationContext 子接口
+		|-ClassPathXml,ApplicationContext
+		|-FileSystemXml,ApplicationContext
+		|-Web,ApplicationContext
 
